@@ -9,7 +9,6 @@ import {
   Route,
   Routes
 } from "react-router-dom";
-// import NoteState from './context/notes/noteState';
 
 
 

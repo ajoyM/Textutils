@@ -1,4 +1,17 @@
 import './App.css';
+import About from './components/About';
+import Alert from './components/Alert';
+import Navbar from './components/Navbar';
+import Textform from './components/Textform';
+import React, { useState } from 'react'
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes
+} from "react-router-dom";
+// import NoteState from './context/notes/noteState';
+
+
 
 const name = "Asmita";
 const element = <h1>Hello, {name}</h1>
@@ -6,46 +19,55 @@ const element = <h1>Hello, {name}</h1>
 
 
 function App() {
+  const [mode, setMode] = useState('light');
+  const removeBackground = () => {
+    document.body.classList.remove('bg-primary');
+    document.body.classList.remove('bg-danger');
+    document.body.classList.remove('bg-light');
+    document.body.classList.remove('bg-success');
+    document.body.classList.remove('bg-warning');
+  }
+  const toggleMode = (cls) => {
+    console.log(cls);
+    removeBackground()
+    document.body.classList.add('bg-'+cls)
+    if (mode === 'light') {
+      setMode('dark');
+      document.body.style.backgroundColor = '#042743'
+      showAlert("Dark mode has been enable", "success");
+    } else {
+      setMode('light');
+      document.body.style.backgroundColor = 'white';
+      showAlert("Light mode has been enable", "success");
+    }
+  }
+
+  const [alert, setAlert] = useState(null);
+  const showAlert = (message, type) => {
+    setAlert({
+      msg: message,
+      type: type
+    })
+    setTimeout(() => {
+      setAlert(null)
+    }, 2000);
+  }
   return (
-   <>
-   <nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="/">KONA</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/">Service</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="/" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Company
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/">About us</a></li>
-            <li><hr class="dropdown-divider" /></li>
-            <li><a class="dropdown-item" href="/">Career</a></li>
-            <li><hr class="dropdown-divider" /></li>
-            <li><a class="dropdown-item" href="/">Contact us</a></li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-        </li>
-      </ul>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
-    </div>
-  </div>
-</nav>
-   </>
+    <>
+    {/* <NoteState> */}
+    <Router>
+     <Navbar title={name} mode={mode} toggleMode={toggleMode}/>
+      <Alert alert={alert}/>
+      {/* <About /> */}
+      <div className="container my-3">
+        <Routes>
+            <Route path="/about" element={<About mode={mode} />} />
+            <Route path="/" element={<Textform heading="Enter the text to analyze" mode={mode} />} />
+          </Routes>
+      </div>
+    </Router>
+    {/* </NoteState> */}
+    </>
   );
 }
 
